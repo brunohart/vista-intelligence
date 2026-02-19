@@ -75,16 +75,6 @@ Vista Cloud isn't just a re-hosting — it's a platform shift that enables dynam
 - Dark theme throughout, responsive layouts
 - Open any `.html` file directly in a browser, or deploy to GitHub Pages
 
----
-
-## Deploy to GitHub Pages
-
-This repo is configured for GitHub Pages. Once pushed:
-
-1. Go to **Settings > Pages**
-2. Set source to **Deploy from a branch**
-3. Select **main** branch, root folder
-4. The site will be live at `https://brunohart.github.io/vista-intelligence/`
 
 ---
 
