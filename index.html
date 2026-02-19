@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Intelligence</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wrap {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 600px;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #e2e8f0, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .sub {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 3rem;
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  a {
+    display: block;
+    padding: 1.25rem 2rem;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    color: #e2e8f0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+  a:hover {
+    background: #1a2236;
+    border-color: #06b6d4;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  a span {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: #64748b;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Vista Intelligence</h1>
+  <p class="sub">Vista Group (NZX: VGL) — Research & Visualisations</p>
+  <div class="links">
+    <a href="vista-dashboard.html">Intelligence Dashboard<span>Company overview, timeline, products, financials, global footprint, competitive landscape</span></a>
+    <a href="value-chain-diagram.html">Film Industry Value Chain<span>Vista's 12 products mapped across 6 stages of the theatrical film value chain</span></a>
+    <a href="04-growth-charts.html">Financial Growth Charts<span>14 Chart.js visualisations — revenue, EBITDA, SaaS growth, share price, ARR trajectory</span></a>
+  </div>
+</div>
+</body>
+</html>

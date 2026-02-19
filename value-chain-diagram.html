@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Group — Film Industry Value Chain Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2236;
+    --border: #1e293b;
+    --border-light: #334155;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #06b6d4;
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --stage-1: #6366f1;
+    --stage-2: #8b5cf6;
+    --stage-3: #ec4899;
+    --stage-4: #f59e0b;
+    --stage-5: #10b981;
+    --stage-6: #06b6d4;
+    --vista-blue: #3b82f6;
+    --vista-purple: #a855f7;
+    --vista-amber: #f59e0b;
+    --vista-green: #22c55e;
+    --vista-pink: #ec4899;
+    --vista-cyan: #06b6d4;
+    --no-presence: #374151;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 60px 40px 40px;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #e2e8f0 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .header p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 24px 40px 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ── MAIN CHAIN ── */
+  .chain-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px 60px;
+  }
+
+  /* Horizontal flow arrow */
+  .flow-track {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 60px;
+  }
+  .flow-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--stage-1), var(--stage-2), var(--stage-3), var(--stage-4), var(--stage-5), var(--stage-6));
+    z-index: 0;
+    transform: translateY(-50%);
+  }
+
+  .stage-node {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 6px;
+  }
+  .stage-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .stage-node:hover .stage-circle {
+    transform: scale(1.15);
+  }
+  .stage-label {
+    margin-top: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .stage-number {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* Arrow between nodes */
+  .stage-node:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--text-dim);
+    z-index: 2;
+    display: none;
+  }
+
+  /* ── STAGE DETAIL CARDS ── */
+  .stages-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .stage-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+    align-items: start;
+    position: relative;
+  }
+  .stage-row::before {
+    content: '';
+    position: absolute;
+    left: 280px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .stage-info {
+    position: relative;
+  }
+  .stage-info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .stage-info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .stage-info h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .stage-info p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .stage-players {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .stage-players strong {
+    color: var(--text-muted);
+  }
+
+  /* Product cards area */
+  .products-area {
+    padding-left: 32px;
+  }
+  .products-area h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .product-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .product-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .product-badge {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .product-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .product-card .role {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .product-card .desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .product-card .stat {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .product-card .stat::before {
+    content: '●';
+    font-size: 0.4rem;
+  }
+
+  /* Category colors */
+  .cat-exhibition .product-card::before { background: var(--vista-blue); }
+  .cat-exhibition .product-badge { background: rgba(59,130,246,0.15); color: var(--vista-blue); }
+  .cat-distribution .product-card::before { background: var(--vista-purple); }
+  .cat-distribution .product-badge { background: rgba(168,85,247,0.15); color: var(--vista-purple); }
+  .cat-data .product-card::before { background: var(--vista-amber); }
+  .cat-data .product-badge { background: rgba(245,158,11,0.15); color: var(--vista-amber); }
+  .cat-consumer .product-card::before { background: var(--vista-green); }
+  .cat-consumer .product-badge { background: rgba(34,197,94,0.15); color: var(--vista-green); }
+  .cat-marketing .product-card::before { background: var(--vista-pink); }
+  .cat-marketing .product-badge { background: rgba(236,72,153,0.15); color: var(--vista-pink); }
+  .cat-integration .product-card::before { background: var(--vista-cyan); }
+  .cat-integration .product-badge { background: rgba(6,182,212,0.15); color: var(--vista-cyan); }
+
+  /* No presence card */
+  .no-presence {
+    background: transparent;
+    border: 1px dashed var(--border);
+    opacity: 0.5;
+  }
+  .no-presence::before { background: var(--no-presence) !important; }
+  .no-presence:hover {
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── DATA FLYWHEEL ── */
+  .flywheel-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-top: 1px solid var(--border);
+  }
+  .flywheel-section h2 {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .flywheel-section > p {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 40px;
+  }
+
+  .flywheel-diagram {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+  }
+  .flywheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(6,182,212,0.25);
+    z-index: 2;
+  }
+  .flywheel-center span:first-child {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+    margin-bottom: 2px;
+  }
+  .flywheel-center span:last-child {
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  .flywheel-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 460px;
+    height: 460px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid var(--border);
+  }
+  .flywheel-ring-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 260px;
+    height: 260px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px dashed var(--border);
+  }
+
+  /* Spinning arrow ring */
+  .spin-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 360px;
+    height: 360px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--accent);
+    border-right-color: rgba(6,182,212,0.3);
+    animation: spin 12s linear infinite;
+    z-index: 1;
+  }
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  .flywheel-node {
+    position: absolute;
+    width: 120px;
+    text-align: center;
+    z-index: 3;
+  }
+  .flywheel-node-dot {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    border: 2px solid var(--bg);
+    transition: transform 0.3s ease;
+  }
+  .flywheel-node:hover .flywheel-node-dot {
+    transform: scale(1.2);
+  }
+  .flywheel-node-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .flywheel-node-sub {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* Arrow connectors between flywheel nodes */
+  .flywheel-arrows {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 460px;
+    height: 460px;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+  .flywheel-arrows svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── COVERAGE MATRIX ── */
+  .matrix-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-top: 1px solid var(--border);
+  }
+  .matrix-section h2 {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .matrix-section > p {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+  .matrix-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .matrix-table th:first-child {
+    width: 200px;
+  }
+  .matrix-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(30,41,59,0.5);
+    vertical-align: middle;
+  }
+  .matrix-table tr:hover td {
+    background: rgba(17,24,39,0.5);
+  }
+  .matrix-table .product-name {
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .matrix-table .product-name .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .matrix-cell {
+    text-align: center;
+  }
+  .presence-full {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.9;
+  }
+  .presence-partial {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid var(--accent);
+    opacity: 0.6;
+  }
+  .presence-none {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1000px) {
+    .stage-row {
+      grid-template-columns: 1fr;
+    }
+    .stage-row::before { display: none; }
+    .products-area { padding-left: 0; }
+    .flow-track { flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .flow-track::before { display: none; }
+    .flywheel-diagram { width: 100%; height: auto; aspect-ratio: 1; max-width: 500px; }
+    .flywheel-ring, .flywheel-ring-inner, .spin-ring { display: none; }
+    .matrix-table { font-size: 0.7rem; }
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Film Industry Value Chain &times; Vista Group Products</h1>
+  <p>How Vista Group's 12 products map across every stage of the theatrical film value chain — from financing and distribution through exhibition, audience analytics, and consumer discovery.</p>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vista-blue)"></div>Exhibition</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vista-purple)"></div>Distribution</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vista-pink)"></div>Marketing</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vista-amber)"></div>Data &amp; Analytics</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vista-green)"></div>Consumer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vista-cyan)"></div>Integration</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--no-presence)"></div>No Presence</div>
+</div>
+
+<!-- HORIZONTAL CHAIN OVERVIEW -->
+<div class="chain-container">
+  <div class="flow-track">
+    <div class="stage-node">
+      <div class="stage-circle" style="background:var(--stage-1)">1</div>
+      <div class="stage-label" style="color:var(--stage-1)">Development<br>&amp; Production</div>
+      <div class="stage-number">No presence</div>
+    </div>
+    <div class="stage-node">
+      <div class="stage-circle" style="background:var(--stage-2)">2</div>
+      <div class="stage-label" style="color:var(--stage-2)">Financing<br>&amp; Rights</div>
+      <div class="stage-number">1 product</div>
+    </div>
+    <div class="stage-node">
+      <div class="stage-circle" style="background:var(--stage-3)">3</div>
+      <div class="stage-label" style="color:var(--stage-3)">Distribution<br>&amp; Marketing</div>
+      <div class="stage-number">4 products</div>
+    </div>
+    <div class="stage-node">
+      <div class="stage-circle" style="background:var(--stage-4)">4</div>
+      <div class="stage-label" style="color:var(--stage-4)">Exhibition</div>
+      <div class="stage-number">6 products</div>
+    </div>
+    <div class="stage-node">
+      <div class="stage-circle" style="background:var(--stage-5)">5</div>
+      <div class="stage-label" style="color:var(--stage-5)">Audience Data<br>&amp; Analytics</div>
+      <div class="stage-number">4 products</div>
+    </div>
+    <div class="stage-node">
+      <div class="stage-circle" style="background:var(--stage-6)">6</div>
+      <div class="stage-label" style="color:var(--stage-6)">Discovery &amp;<br>Audience</div>
+      <div class="stage-number">2 products</div>
+    </div>
+  </div>
+
+  <!-- DETAILED STAGE BREAKDOWN -->
+  <div class="stages-detail">
+
+    <!-- STAGE 1 -->
+    <div class="stage-row fade-in">
+      <div class="stage-info">
+        <div class="stage-info-header">
+          <div class="stage-info-icon" style="background:rgba(99,102,241,0.15); color:var(--stage-1)">01</div>
+          <h2 style="color:var(--stage-1)">Development & Production</h2>
+        </div>
+        <p>Scripts are developed, talent is attached, films are greenlit. Principal photography, post-production, VFX, and final delivery.</p>
+        <div class="stage-players"><strong>Key players:</strong> Disney, Warner Bros., Universal, Paramount, Sony, Netflix, Amazon MGM, A24, Neon, Blumhouse</div>
+      </div>
+      <div class="products-area">
+        <h3>Vista Products at This Stage</h3>
+        <div class="product-cards">
+          <div class="product-card no-presence">
+            <div class="product-card-header">
+              <h4 style="color:var(--text-dim)">No Presence</h4>
+            </div>
+            <div class="desc" style="color:var(--text-dim)">Vista has no products in development or production. This domain belongs to Entertainment Partners, Movie Magic, Frame.io, and Adobe. The furthest adjacency — but Movio audience data could theoretically inform greenlight decisions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-row fade-in">
+      <div class="stage-info">
+        <div class="stage-info-header">
+          <div class="stage-info-icon" style="background:rgba(139,92,246,0.15); color:var(--stage-2)">02</div>
+          <h2 style="color:var(--stage-2)">Financing & Rights</h2>
+        </div>
+        <p>Films are financed through equity, pre-sales, tax credits, and co-production treaties. Distribution rights are licensed across territories and windows.</p>
+        <div class="stage-players"><strong>Key players:</strong> Studios, sales agents (FilmNation, Endeavor Content), financiers, collecting societies</div>
+      </div>
+      <div class="products-area cat-distribution">
+        <h3>Vista Products at This Stage</h3>
+        <div class="product-cards">
+          <div class="product-card">
+            <div class="product-card-header">
+              <span class="product-badge">Distribution</span>
+            </div>
+            <h4>Maccs</h4>
+            <div class="role">Film Rights & Royalty Management</div>
+            <div class="desc">MaccsCore manages the complete film lifecycle — tracking rights across territories, calculating royalties, and managing revenue flows. Used by Warner Bros. and Paramount for global distribution. Mica extends this to indie distributors at lower cost.</div>
+            <div class="stat">100+ distributors in 50+ countries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-row fade-in">
+      <div class="stage-info">
+        <div class="stage-info-header">
+          <div class="stage-info-icon" style="background:rgba(236,72,153,0.15); color:var(--stage-3)">03</div>
+          <h2 style="color:var(--stage-3)">Distribution & Marketing</h2>
+        </div>
+        <p>Distributors plan release strategy — territories, screen counts, P&A budgets ($150–200M+ for tentpoles). Digital marketing, audience targeting, and creative assets are executed.</p>
+        <div class="stage-players"><strong>Key players:</strong> Studio distribution arms, Roadshow Films, StudioCanal, Madman, marketing agencies</div>
+      </div>
+      <div class="products-area">
+        <h3>Vista Products at This Stage</h3>
+        <div class="product-cards">
+          <div class="product-card cat-distribution">
+            <div class="product-card-header">
+              <span class="product-badge">Distribution</span>
+            </div>
+            <h4>Maccs + MaccsDCHub</h4>
+            <div class="role">Distribution Logistics & DCP Delivery</div>
+            <div class="desc">Manages booking films into territories, DCP (Digital Cinema Package) delivery automation, and financial settlements between distributors and exhibitors.</div>
+            <div class="stat">Automates DCP logistics for major studios</div>
+          </div>
+          <div class="product-card cat-marketing">
+            <div class="product-card-header">
+              <span class="product-badge">Marketing</span>
+            </div>
+            <h4>Powster</h4>
+            <div class="role">Creative Studio & Digital Experiences</div>
+            <div class="desc">Builds official movie websites, interactive experiences, and dynamic ads with real-time showtimes. Created immersive sites for Wicked, How to Train Your Dragon, and Musica.</div>
+            <div class="stat">150+ distributors including all 5 majors</div>
+          </div>
+          <div class="product-card cat-data">
+            <div class="product-card-header">
+              <span class="product-badge">Data</span>
+            </div>
+            <h4>Movio Media</h4>
+            <div class="role">Audience Intelligence for Studios</div>
+            <div class="desc">Studios access 39M+ active moviegoer profiles linked to 350M+ transaction records. Identifies target segments, activates exhibitor loyalty programs, and measures campaign ROI to actual ticket purchase.</div>
+            <div class="stat">STX's Den of Thieves: 12x ROAS via Movio targeting</div>
+          </div>
+          <div class="product-card cat-integration">
+            <div class="product-card-header">
+              <span class="product-badge">Integration</span>
+            </div>
+            <h4>MovieXchange</h4>
+            <div class="role">Studio ↔ Exhibitor Data Exchange</div>
+            <div class="desc">MX Film delivers studio-official marketing assets. MX Showtimes standardizes scheduling data. MX Tickets enables any ticketing vendor to sell seats at any connected cinema.</div>
+            <div class="stat">Industry-standard integration layer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="stage-row fade-in">
+      <div class="stage-info">
+        <div class="stage-info-header">
+          <div class="stage-info-icon" style="background:rgba(245,158,11,0.15); color:var(--stage-4)">04</div>
+          <h2 style="color:var(--stage-4)">Exhibition</h2>
+        </div>
+        <p>Cinemas screen films. Tickets are sold, concessions purchased, loyalty managed. The operational machinery — scheduling, staffing, projectors, payments — runs continuously. This is Vista's heartland.</p>
+        <div class="stage-players"><strong>Key players:</strong> AMC/Odeon, Vue, Cineworld, Kinepolis, Event, Hoyts, Cineplex, CGV + thousands of independents</div>
+      </div>
+      <div class="products-area">
+        <h3>Vista Products at This Stage — 46% Global Market Share</h3>
+        <div class="product-cards">
+          <div class="product-card cat-exhibition">
+            <div class="product-card-header">
+              <span class="product-badge">Exhibition</span>
+            </div>
+            <h4>Vista Cinema / Vista Cloud</h4>
+            <div class="role">Core Cinema Management Platform</div>
+            <div class="desc">The operating system of a movie theatre. 20+ modules: ticketing, seat selection, POS, concessions, loyalty, scheduling, staff management, reporting. Vista Cloud is the SaaS-native rebuild on Azure.</div>
+            <div class="stat">5,500+ sites · 45,000+ screens · 116 countries</div>
+          </div>
+          <div class="product-card cat-exhibition">
+            <div class="product-card-header">
+              <span class="product-badge">Exhibition</span>
+            </div>
+            <h4>Veezi</h4>
+            <div class="role">Cloud POS for Independents</div>
+            <div class="desc">Purpose-built for operators with &lt;20 screens — arthouses, drive-ins, festivals. Cloud-native SaaS with no setup fees. The on-ramp to the Vista ecosystem.</div>
+            <div class="stat">500+ sites globally · Serves Yorck Kinogruppe Berlin</div>
+          </div>
+          <div class="product-card cat-exhibition">
+            <div class="product-card-header">
+              <span class="product-badge">Exhibition</span>
+            </div>
+            <h4>Cinema Intelligence</h4>
+            <div class="role">AI Scheduling & Forecasting</div>
+            <div class="desc">ML models predict attendance per film per site. Auto-generates optimal weekly schedules respecting distributor requirements. Forecasting feeds into staff scheduling (MovieTeam) and dynamic pricing.</div>
+            <div class="stat">Only AI scheduling tool purpose-built for cinema</div>
+          </div>
+          <div class="product-card cat-exhibition">
+            <div class="product-card-header">
+              <span class="product-badge">Exhibition</span>
+            </div>
+            <h4>Vista Payments</h4>
+            <div class="role">Embedded Payment Processing</div>
+            <div class="desc">Partnership with Adyen. Embeds payment processing directly into Vista platform, capturing a share of every card transaction. Transforms Vista from software vendor to financial infrastructure.</div>
+            <div class="stat">NZ$15M ARR target at full deployment</div>
+          </div>
+          <div class="product-card cat-exhibition">
+            <div class="product-card-header">
+              <span class="product-badge">Exhibition</span>
+            </div>
+            <h4>Lumos Suite</h4>
+            <div class="role">Consumer-Facing Digital Channels</div>
+            <div class="desc">Lumos Web (online ticketing), Lumos Mobile (branded cinema app), Lumos Kiosk (self-service), Lumos Order (in-venue F&B ordering). The digital front door of Vista-powered cinemas.</div>
+            <div class="stat">White-labelled across thousands of cinema sites</div>
+          </div>
+          <div class="product-card cat-data">
+            <div class="product-card-header">
+              <span class="product-badge">Data</span>
+            </div>
+            <h4>Horizon / Oneview</h4>
+            <div class="role">Real-Time Business Intelligence</div>
+            <div class="desc">Unifies data from Vista Cinema, Movio, and Numero into a single executive dashboard. Included with Vista Cloud. Oneview mobile app for on-the-go performance monitoring.</div>
+            <div class="stat">Bundled with Vista Cloud — key migration driver</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 5 -->
+    <div class="stage-row fade-in">
+      <div class="stage-info">
+        <div class="stage-info-header">
+          <div class="stage-info-icon" style="background:rgba(16,185,129,0.15); color:var(--stage-5)">05</div>
+          <h2 style="color:var(--stage-5)">Audience Data & Analytics</h2>
+        </div>
+        <p>Box office results reported. Audience demographics and behaviors analyzed. Studios evaluate campaign performance, plan future releases, and inform creative decisions. Exhibitors optimize programming and marketing.</p>
+        <div class="stage-players"><strong>Key players:</strong> Comscore (competitor), Gower Street Analytics, studios' internal research teams</div>
+      </div>
+      <div class="products-area">
+        <h3>Vista Products at This Stage — The Data Powerhouse</h3>
+        <div class="product-cards">
+          <div class="product-card cat-data">
+            <div class="product-card-header">
+              <span class="product-badge">Data</span>
+            </div>
+            <h4>Numero</h4>
+            <div class="role">Box Office Reporting & Tracking</div>
+            <div class="desc">Real-time grosses, presale/hourly data, historical archives, and release calendars. Achieved 100% UK box office coverage in 2024. Expanding into US market against Comscore.</div>
+            <div class="stat">22 territories · 6 continents · Roadshow Films client</div>
+          </div>
+          <div class="product-card cat-data">
+            <div class="product-card-header">
+              <span class="product-badge">Data</span>
+            </div>
+            <h4>Movio Cinema EQ</h4>
+            <div class="role">Exhibitor CRM & Campaign Engine</div>
+            <div class="desc">Proprietary propensity algorithm predicts which members will see which films. Automated campaign journeys, dynamic content personalisation. 5.9x higher visitation rate from targeted campaigns.</div>
+            <div class="stat">100M+ moviegoer profiles · 750M+ behavioral records</div>
+          </div>
+          <div class="product-card cat-data">
+            <div class="product-card-header">
+              <span class="product-badge">Data</span>
+            </div>
+            <h4>Movio Media</h4>
+            <div class="role">Studio-Facing Audience Intelligence</div>
+            <div class="desc">Studios analyze real moviegoer behavior for targeting and measurement. Amazon Ads partnership proved 100% higher admission rates from custom audiences. Post-campaign attribution to actual purchases.</div>
+            <div class="stat">39M+ active profiles · Used by all Hollywood majors</div>
+          </div>
+          <div class="product-card cat-data">
+            <div class="product-card-header">
+              <span class="product-badge">Data</span>
+            </div>
+            <h4>Movio Research</h4>
+            <div class="role">Industry Intelligence & Insights</div>
+            <div class="desc">Industry-wide moviegoer studies used by studios for greenlighting decisions and marketing budgets. "Behind The Screens" podcast with Numero. Cross-film audience analysis (e.g., Barbenheimer phenomenon).</div>
+            <div class="stat">54% of Inside Out 2 openers were infrequent cinemagoers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 6 -->
+    <div class="stage-row fade-in">
+      <div class="stage-info">
+        <div class="stage-info-header">
+          <div class="stage-info-icon" style="background:rgba(6,182,212,0.15); color:var(--stage-6)">06</div>
+          <h2 style="color:var(--stage-6)">Discovery & Audience</h2>
+        </div>
+        <p>Consumers decide what to watch and where. They browse reviews, check session times, compare streaming options, and choose between cinema, streaming, or staying home.</p>
+        <div class="stage-players"><strong>Key players:</strong> Google (existential threat), Fandango, Letterboxd, IMDb, Rotten Tomatoes, JustWatch, social media</div>
+      </div>
+      <div class="products-area">
+        <h3>Vista Products at This Stage — The Consumer Layer</h3>
+        <div class="product-cards">
+          <div class="product-card cat-consumer">
+            <div class="product-card-header">
+              <span class="product-badge">Consumer</span>
+            </div>
+            <h4>Flicks</h4>
+            <div class="role">Film Discovery Platform (NZ / AU / UK)</div>
+            <div class="desc">"What to watch and where to watch it" — cinema sessions + streaming availability + editorial reviews. Transforming into "the world's best content assistant" with AI-driven personalisation. The top of the data funnel feeding Vista's B2B ecosystem.</div>
+            <div class="stat">22M unique users · 500+ cinemas · 30+ streaming platforms</div>
+          </div>
+          <div class="product-card cat-consumer">
+            <div class="product-card-header">
+              <span class="product-badge">Consumer</span>
+            </div>
+            <h4>Lumos Suite</h4>
+            <div class="role">Cinema-Branded Digital Experience</div>
+            <div class="desc">While Flicks is Vista's own consumer brand, Lumos provides white-labelled consumer touchpoints for individual cinemas — their websites, apps, and kiosks. The last mile between decision and purchase.</div>
+            <div class="stat">Directly converts discovery into ticket purchase</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /stages-detail -->
+</div><!-- /chain-container -->
+
+<!-- DATA FLYWHEEL -->
+<div class="flywheel-section fade-in">
+  <h2>The Data Flywheel</h2>
+  <p>Every transaction strengthens every product. Data flows bidirectionally, creating compounding value no competitor can replicate.</p>
+
+  <div class="flywheel-diagram">
+    <!-- Rings -->
+    <div class="flywheel-ring"></div>
+    <div class="flywheel-ring-inner"></div>
+    <div class="spin-ring"></div>
+
+    <!-- Center -->
+    <div class="flywheel-center">
+      <span>Vista's</span>
+      <span>Data Core</span>
+    </div>
+
+    <!-- Nodes positioned around the circle -->
+    <!-- Top -->
+    <div class="flywheel-node" style="top: 10px; left: 50%; transform: translateX(-50%);">
+      <div class="flywheel-node-dot" style="background:var(--vista-green)">F</div>
+      <div class="flywheel-node-label">Flicks</div>
+      <div class="flywheel-node-sub">Intent signals</div>
+    </div>
+    <!-- Top Right -->
+    <div class="flywheel-node" style="top: 100px; right: 20px;">
+      <div class="flywheel-node-dot" style="background:var(--vista-pink)">P</div>
+      <div class="flywheel-node-label">Powster</div>
+      <div class="flywheel-node-sub">Creative engagement</div>
+    </div>
+    <!-- Right -->
+    <div class="flywheel-node" style="top: 50%; right: 0px; transform: translateY(-50%);">
+      <div class="flywheel-node-dot" style="background:var(--vista-blue)">VC</div>
+      <div class="flywheel-node-label">Vista Cloud</div>
+      <div class="flywheel-node-sub">Transactions</div>
+    </div>
+    <!-- Bottom Right -->
+    <div class="flywheel-node" style="bottom: 100px; right: 20px;">
+      <div class="flywheel-node-dot" style="background:var(--vista-amber)">Mv</div>
+      <div class="flywheel-node-label">Movio</div>
+      <div class="flywheel-node-sub">Behavioral profiles</div>
+    </div>
+    <!-- Bottom -->
+    <div class="flywheel-node" style="bottom: 10px; left: 50%; transform: translateX(-50%);">
+      <div class="flywheel-node-dot" style="background:var(--vista-amber)">N</div>
+      <div class="flywheel-node-label">Numero</div>
+      <div class="flywheel-node-sub">Market outcomes</div>
+    </div>
+    <!-- Bottom Left -->
+    <div class="flywheel-node" style="bottom: 100px; left: 20px;">
+      <div class="flywheel-node-dot" style="background:var(--vista-purple)">M</div>
+      <div class="flywheel-node-label">Maccs</div>
+      <div class="flywheel-node-sub">Distribution logistics</div>
+    </div>
+    <!-- Left -->
+    <div class="flywheel-node" style="top: 50%; left: 0px; transform: translateY(-50%);">
+      <div class="flywheel-node-dot" style="background:var(--vista-blue)">CI</div>
+      <div class="flywheel-node-label">Cinema Intel</div>
+      <div class="flywheel-node-sub">Forecasting</div>
+    </div>
+    <!-- Top Left -->
+    <div class="flywheel-node" style="top: 100px; left: 20px;">
+      <div class="flywheel-node-dot" style="background:var(--vista-cyan)">MX</div>
+      <div class="flywheel-node-label">MovieXchange</div>
+      <div class="flywheel-node-sub">Industry network</div>
+    </div>
+  </div>
+</div>
+
+<!-- COVERAGE MATRIX -->
+<div class="matrix-section fade-in">
+  <h2>Product × Value Chain Coverage Matrix</h2>
+  <p>Full presence, partial presence, or no presence at each stage of the film value chain.</p>
+
+  <div style="overflow-x:auto;">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th class="matrix-cell">Development</th>
+          <th class="matrix-cell">Financing & Rights</th>
+          <th class="matrix-cell">Distribution & Marketing</th>
+          <th class="matrix-cell">Exhibition</th>
+          <th class="matrix-cell">Data & Analytics</th>
+          <th class="matrix-cell">Discovery</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-blue)"></span>Vista Cinema / Cloud</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-blue)"></span>Veezi</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-blue)"></span>Cinema Intelligence</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-blue)"></span>Vista Payments</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-blue)"></span>Lumos Suite</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-purple)"></span>Maccs</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-pink)"></span>Powster</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-amber)"></span>Movio Cinema EQ</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-amber)"></span>Movio Media</div></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-amber)"></span>Numero</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-amber)"></span>Horizon / Oneview</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-cyan)"></span>MovieXchange</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+        </tr>
+        <tr>
+          <td><div class="product-name"><span class="dot" style="background:var(--vista-green)"></span>Flicks</div></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-none"></span></td>
+          <td class="matrix-cell"><span class="presence-partial"></span></td>
+          <td class="matrix-cell"><span class="presence-full"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Vista Intelligence Project &middot; Film Industry Value Chain Map &middot; Data sourced from Vista Group NZX filings, investor presentations, and product documentation &middot; February 2026
+</div>
+
+<script>
+// Scroll-triggered fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

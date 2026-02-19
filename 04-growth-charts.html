@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Group International (VGL) -- Financial Intelligence Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0e1a;
+            color: #e0e6f0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f1629 0%, #1a1f3a 50%, #0d1225 100%);
+            border-bottom: 1px solid #2a3050;
+            padding: 40px 60px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: #7b8ab8;
+            font-weight: 400;
+        }
+
+        .header .ticker {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 12px;
+            letter-spacing: 1px;
+        }
+
+        .kpi-strip {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 28px 60px;
+            background: #0d1225;
+            border-bottom: 1px solid #1a2040;
+            flex-wrap: wrap;
+        }
+
+        .kpi {
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .kpi-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .kpi-value.green { color: #34d399; }
+        .kpi-value.amber { color: #fbbf24; }
+        .kpi-value.red { color: #f87171; }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: #6b7599;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-top: 4px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 60px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: linear-gradient(180deg, #111827 0%, #0f1420 100%);
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            transition: border-color 0.2s;
+        }
+
+        .chart-card:hover {
+            border-color: #334155;
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 4px;
+        }
+
+        .chart-card .chart-desc {
+            font-size: 0.8rem;
+            color: #4b5563;
+            margin-bottom: 20px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 360px;
+        }
+
+        .chart-card.tall .chart-wrapper {
+            height: 420px;
+        }
+
+        .note {
+            font-size: 0.75rem;
+            color: #4b5563;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #94a3b8;
+            margin: 50px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #374151;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a2040;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: #4b5563;
+            text-decoration: none;
+        }
+
+        .table-card {
+            background: linear-gradient(180deg, #111827 0%, #0f1420 100%);
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .table-card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: #1a2040;
+            color: #94a3b8;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid #2a3050;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #151d30;
+            color: #cbd5e1;
+        }
+
+        tr:hover td {
+            background: #141c30;
+        }
+
+        .positive { color: #34d399; }
+        .negative { color: #f87171; }
+
+        @media (max-width: 900px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .header { padding: 30px 20px; }
+            .container { padding: 20px; }
+            .kpi-strip { padding: 20px; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Vista Group International</h1>
+    <div class="subtitle">Growth & Financial Intelligence Dashboard</div>
+    <div class="ticker">NZX: VGL &middot; ASX: VGL</div>
+</div>
+
+<div class="kpi-strip">
+    <div class="kpi">
+        <div class="kpi-value">$150.0m</div>
+        <div class="kpi-label">2024 Revenue (Record)</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-value green">$21.6m</div>
+        <div class="kpi-label">2024 EBITDA (+62%)</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-value amber">~90%</div>
+        <div class="kpi-label">Recurring Revenue</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-value">$145.6m</div>
+        <div class="kpi-label">ARR (2024)</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-value green">33-37%</div>
+        <div class="kpi-label">LT EBITDA Margin Target</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-value amber">NZ$2.58</div>
+        <div class="kpi-label">Recent Share Price</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- SECTION: Revenue -->
+    <div class="section-title">Revenue Growth</div>
+
+    <div class="chart-grid">
+        <div class="chart-card full-width tall">
+            <h2>Annual Revenue (NZ$ millions) -- 2013 to 2025E</h2>
+            <div class="chart-desc">Full revenue history from pre-IPO through to FY2025 guidance midpoint</div>
+            <div class="chart-wrapper">
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="note">2025E is midpoint of company guidance (NZ$167-173m). All figures in NZ$.</div>
+        </div>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h2>Revenue Composition: Recurring vs Non-Recurring</h2>
+            <div class="chart-desc">Shift toward recurring revenue model (2020-2025E)</div>
+            <div class="chart-wrapper">
+                <canvas id="recurringChart"></canvas>
+            </div>
+            <div class="note">2025E recurring revenue is midpoint of NZ$152-158m guidance.</div>
+        </div>
+
+        <div class="chart-card">
+            <h2>SaaS Revenue Growth (NZ$ millions)</h2>
+            <div class="chart-desc">Cloud/SaaS component growing at 20%+ annually</div>
+            <div class="chart-wrapper">
+                <canvas id="saasChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: Segments -->
+    <div class="section-title">Segment Breakdown</div>
+
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h2>2024 Revenue by Segment</h2>
+            <div class="chart-desc">Cinema (~80%) vs Film (~20%) segments</div>
+            <div class="chart-wrapper">
+                <canvas id="segmentPie2024"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2>Segment Contribution Margins (NZ$m, 2024)</h2>
+            <div class="chart-desc">Film segment margin growing faster (+24% YoY vs +11%)</div>
+            <div class="chart-wrapper">
+                <canvas id="contributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-card full-width">
+            <h2>H1 2025 Segment Performance</h2>
+            <div class="chart-desc">Both segments accelerating -- Cinema +9%, Film +16% YoY</div>
+            <div class="chart-wrapper">
+                <canvas id="h1SegmentChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: Profitability -->
+    <div class="section-title">Profitability & Margins</div>
+
+    <div class="chart-grid">
+        <div class="chart-card full-width tall">
+            <h2>EBITDA & EBITDA Margin Trend</h2>
+            <div class="chart-desc">Path from COVID losses to 14.4% margin, targeting 33-37% long-term</div>
+            <div class="chart-wrapper">
+                <canvas id="ebitdaChart"></canvas>
+            </div>
+            <div class="note">2025E margin is midpoint of 16-18% guidance. Long-term aspiration is 33-37%.</div>
+        </div>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h2>Net Profit / (Loss) (NZ$ millions)</h2>
+            <div class="chart-desc">Return to near-breakeven in 2024 after years of losses</div>
+            <div class="chart-wrapper">
+                <canvas id="netProfitChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2>Operating Cash Flow (NZ$ millions)</h2>
+            <div class="chart-desc">Cash generation accelerating; FCF positive from H2 2024</div>
+            <div class="chart-wrapper">
+                <canvas id="cashflowChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: Headcount -->
+    <div class="section-title">Operational Efficiency</div>
+
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h2>Employee Headcount</h2>
+            <div class="chart-desc">Right-sizing after 2022 transformation hiring peak</div>
+            <div class="chart-wrapper">
+                <canvas id="headcountChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2>Revenue per Employee (NZ$ thousands)</h2>
+            <div class="chart-desc">Productivity improving as cloud platform scales</div>
+            <div class="chart-wrapper">
+                <canvas id="revPerEmployee"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: Share Price -->
+    <div class="section-title">Share Price & Valuation</div>
+
+    <div class="chart-grid">
+        <div class="chart-card full-width tall">
+            <h2>Share Price Key Events (NZ$)</h2>
+            <div class="chart-desc">From NZ$2.35 IPO to NZ$5.85 all-time high, NZ$0.84 COVID low, and current ~NZ$2.58</div>
+            <div class="chart-wrapper">
+                <canvas id="sharePriceChart"></canvas>
+            </div>
+            <div class="note">Not a continuous price chart. Shows key milestone prices at notable dates.</div>
+        </div>
+    </div>
+
+    <!-- SECTION: Long-term targets -->
+    <div class="section-title">Long-Term Aspirations</div>
+
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h2>ARR Trajectory (NZ$ millions)</h2>
+            <div class="chart-desc">Path from NZ$126m to NZ$315m "100% Platform" target</div>
+            <div class="chart-wrapper">
+                <canvas id="arrChart"></canvas>
+            </div>
+            <div class="note">Long-term NZ$315m ARR target date not specified; shown indicatively.</div>
+        </div>
+
+        <div class="chart-card">
+            <h2>EBITDA Margin Expansion Roadmap</h2>
+            <div class="chart-desc">From 14.4% today to 33-37% aspiration</div>
+            <div class="chart-wrapper">
+                <canvas id="marginRoadmap"></canvas>
+            </div>
+            <div class="note">Long-term target is 33-37%. Timeline is indicative based on cloud migration targets.</div>
+        </div>
+    </div>
+
+    <!-- DATA TABLE -->
+    <div class="section-title">Comprehensive Financial Summary</div>
+
+    <div class="table-card">
+        <h2>Key Financial Metrics by Year (NZ$ millions unless stated)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>2019</th>
+                    <th>2020</th>
+                    <th>2021</th>
+                    <th>2022</th>
+                    <th>2023</th>
+                    <th>2024</th>
+                    <th>2025E</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Total Revenue</td>
+                    <td>143.0</td>
+                    <td>87.5</td>
+                    <td>98.1</td>
+                    <td>135.1</td>
+                    <td>143.0</td>
+                    <td>150.0</td>
+                    <td>167-173</td>
+                </tr>
+                <tr>
+                    <td>YoY Growth</td>
+                    <td class="positive">+26.8%</td>
+                    <td class="negative">-38.8%</td>
+                    <td class="positive">+12.1%</td>
+                    <td class="positive">+37.7%</td>
+                    <td class="positive">+5.9%</td>
+                    <td class="positive">+4.9%</td>
+                    <td class="positive">+11-15%</td>
+                </tr>
+                <tr>
+                    <td>Recurring Revenue</td>
+                    <td>~89</td>
+                    <td>66.0</td>
+                    <td>81.4</td>
+                    <td>112.3</td>
+                    <td>124.0</td>
+                    <td>134.6</td>
+                    <td>152-158</td>
+                </tr>
+                <tr>
+                    <td>SaaS Revenue</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>27.8</td>
+                    <td>38.4</td>
+                    <td>45.9</td>
+                    <td>55.7</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>ARR</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>126.3</td>
+                    <td>145.6</td>
+                    <td>175+</td>
+                </tr>
+                <tr>
+                    <td>EBITDA</td>
+                    <td>~31.1</td>
+                    <td class="negative">-11.0</td>
+                    <td>6.5</td>
+                    <td>10.6</td>
+                    <td>13.3</td>
+                    <td>21.6</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>EBITDA Margin</td>
+                    <td>~21.7%</td>
+                    <td class="negative">-12.6%</td>
+                    <td>6.6%</td>
+                    <td>7.8%</td>
+                    <td>9.3%</td>
+                    <td>14.4%</td>
+                    <td>16-18%</td>
+                </tr>
+                <tr>
+                    <td>Net Profit/(Loss)</td>
+                    <td>21.3</td>
+                    <td class="negative">-56.7</td>
+                    <td class="negative">-9.8</td>
+                    <td class="negative">-21.4</td>
+                    <td class="negative">-13.9</td>
+                    <td class="negative">-1.0</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>Operating Cash Flow</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>11.3</td>
+                    <td>12.4</td>
+                    <td>9.0</td>
+                    <td>16.8</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>Employees</td>
+                    <td>--</td>
+                    <td>613</td>
+                    <td>658</td>
+                    <td>779</td>
+                    <td>716</td>
+                    <td>711</td>
+                    <td>--</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-card">
+        <h2>Capital Events</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Event</th>
+                    <th>Amount</th>
+                    <th>Price/Share</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Aug 2014</td>
+                    <td>IPO (NZX + ASX)</td>
+                    <td>NZ$92.6m total</td>
+                    <td>NZ$2.35</td>
+                    <td>NZ$40m new capital; market cap NZ$191.6m</td>
+                </tr>
+                <tr>
+                    <td>Apr 2020</td>
+                    <td>COVID Emergency Raise</td>
+                    <td>~NZ$65m target</td>
+                    <td>NZ$1.05</td>
+                    <td>NZ$25m placement + NZ$40m entitlement offer. Underwritten by Macquarie Capital & Craigs</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="footer">
+    Vista Group International (NZX/ASX: VGL) Financial Intelligence &middot; Data sourced from annual reports, NZX filings, and public disclosures &middot; February 2026<br>
+    All figures in NZ$ unless otherwise stated. This is not financial advice.
+</div>
+
+<script>
+    // Colour palette
+    const BLUE = '#3b82f6';
+    const BLUE_LIGHT = '#60a5fa';
+    const BLUE_DARK = '#1d4ed8';
+    const GREEN = '#34d399';
+    const GREEN_DARK = '#059669';
+    const AMBER = '#fbbf24';
+    const RED = '#f87171';
+    const PURPLE = '#a78bfa';
+    const TEAL = '#2dd4bf';
+    const PINK = '#f472b6';
+    const GRAY = '#6b7280';
+    const GRID_COLOR = 'rgba(148, 163, 184, 0.08)';
+    const TICK_COLOR = '#4b5563';
+
+    // Common chart options
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: { color: '#94a3b8', font: { size: 11 } }
+            },
+            datalabels: { display: false }
+        },
+        scales: {
+            x: {
+                ticks: { color: TICK_COLOR, font: { size: 10 } },
+                grid: { color: GRID_COLOR }
+            },
+            y: {
+                ticks: { color: TICK_COLOR, font: { size: 10 } },
+                grid: { color: GRID_COLOR }
+            }
+        }
+    };
+
+    // ========================================
+    // 1. REVENUE CHART (Bar)
+    // ========================================
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025E'],
+            datasets: [{
+                label: 'Revenue (NZ$m)',
+                data: [38.7, 55.4, 74.2, 88.3, 100.6, 112.8, 143.0, 87.5, 98.1, 135.1, 143.0, 150.0, 170.0],
+                backgroundColor: [
+                    BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE,
+                    RED,  // COVID year
+                    AMBER, GREEN, GREEN, GREEN,
+                    'rgba(59, 130, 246, 0.5)' // Estimate
+                ],
+                borderColor: [
+                    BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT,
+                    RED,
+                    AMBER, GREEN, GREEN, GREEN,
+                    BLUE_LIGHT
+                ],
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 10, weight: 'bold' },
+                    formatter: (v) => '$' + v.toFixed(1) + 'm'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => 'NZ$' + ctx.raw.toFixed(1) + 'm'
+                    }
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: true,
+                    max: 200,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 2. RECURRING vs NON-RECURRING
+    // ========================================
+    new Chart(document.getElementById('recurringChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2020', '2021', '2022', '2023', '2024', '2025E'],
+            datasets: [
+                {
+                    label: 'Recurring Revenue',
+                    data: [66.0, 81.4, 112.3, 124.0, 134.6, 155.0],
+                    backgroundColor: BLUE,
+                    borderRadius: 4
+                },
+                {
+                    label: 'Non-Recurring Revenue',
+                    data: [21.5, 16.7, 22.8, 19.0, 15.4, 15.0],
+                    backgroundColor: GRAY,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ctx.dataset.label + ': NZ$' + ctx.raw.toFixed(1) + 'm'
+                    }
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                x: { ...commonOptions.scales.x, stacked: true },
+                y: {
+                    ...commonOptions.scales.y,
+                    stacked: true,
+                    beginAtZero: true,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        }
+    });
+
+    // ========================================
+    // 3. SaaS REVENUE
+    // ========================================
+    new Chart(document.getElementById('saasChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2021', '2022', '2023', '2024', 'H1 2025 (ann.)'],
+            datasets: [{
+                label: 'SaaS Revenue (NZ$m)',
+                data: [27.8, 38.4, 45.9, 55.7, 63.2],
+                backgroundColor: [TEAL, TEAL, TEAL, TEAL, 'rgba(45, 212, 191, 0.5)'],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 11, weight: 'bold' },
+                    formatter: (v) => '$' + v.toFixed(1) + 'm'
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: true,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 4. SEGMENT PIE 2024
+    // ========================================
+    new Chart(document.getElementById('segmentPie2024'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Cinema (Vista Cloud, Movio EQ, Veezi, Vista Classic)', 'Film (Maccs, Numero, Powster, Flicks, Movio Research)'],
+            datasets: [{
+                data: [119.8, 30.2],
+                backgroundColor: [BLUE, PURPLE],
+                borderColor: ['#1e3a5f', '#3b2570'],
+                borderWidth: 2,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#94a3b8', font: { size: 11 }, padding: 16 }
+                },
+                datalabels: {
+                    display: true,
+                    color: '#fff',
+                    font: { size: 14, weight: 'bold' },
+                    formatter: (value, ctx) => {
+                        let pct = ((value / 150.0) * 100).toFixed(0);
+                        return '$' + value + 'm\n(' + pct + '%)';
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ctx.label + ': NZ$' + ctx.raw + 'm'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 5. CONTRIBUTION MARGINS
+    // ========================================
+    new Chart(document.getElementById('contributionChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Cinema', 'Film'],
+            datasets: [
+                {
+                    label: '2023 Contribution Margin',
+                    data: [36.2, 9.7],
+                    backgroundColor: 'rgba(59, 130, 246, 0.4)',
+                    borderColor: BLUE_LIGHT,
+                    borderWidth: 1,
+                    borderRadius: 4
+                },
+                {
+                    label: '2024 Contribution Margin',
+                    data: [40.2, 12.0],
+                    backgroundColor: BLUE,
+                    borderColor: BLUE_LIGHT,
+                    borderWidth: 1,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: true,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        }
+    });
+
+    // ========================================
+    // 6. H1 2025 SEGMENT
+    // ========================================
+    new Chart(document.getElementById('h1SegmentChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Cinema', 'Film'],
+            datasets: [
+                {
+                    label: 'H1 2024',
+                    data: [55.5, 14.2],
+                    backgroundColor: 'rgba(59, 130, 246, 0.3)',
+                    borderRadius: 4
+                },
+                {
+                    label: 'H1 2025',
+                    data: [60.5, 16.5],
+                    backgroundColor: BLUE,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            ...commonOptions,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    ...commonOptions.scales.x,
+                    beginAtZero: true,
+                    ticks: {
+                        ...commonOptions.scales.x.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                },
+                y: { ...commonOptions.scales.y }
+            }
+        }
+    });
+
+    // ========================================
+    // 7. EBITDA + MARGIN COMBO
+    // ========================================
+    new Chart(document.getElementById('ebitdaChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025E'],
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'EBITDA (NZ$m)',
+                    data: [31.1, -11.0, 6.5, 10.6, 13.3, 21.6, 28.9],
+                    backgroundColor: [GREEN, RED, AMBER, AMBER, BLUE, GREEN, 'rgba(52, 211, 153, 0.4)'],
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'EBITDA Margin %',
+                    data: [21.7, -12.6, 6.6, 7.8, 9.3, 14.4, 17.0],
+                    borderColor: AMBER,
+                    backgroundColor: 'transparent',
+                    pointBackgroundColor: AMBER,
+                    pointBorderColor: AMBER,
+                    pointRadius: 5,
+                    borderWidth: 2.5,
+                    tension: 0.3,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#94a3b8', font: { size: 11 } }
+                },
+                datalabels: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            if (ctx.dataset.yAxisID === 'y1') return 'Margin: ' + ctx.raw + '%';
+                            return 'EBITDA: NZ$' + ctx.raw + 'm';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: TICK_COLOR, font: { size: 10 } },
+                    grid: { color: GRID_COLOR }
+                },
+                y: {
+                    position: 'left',
+                    ticks: {
+                        color: TICK_COLOR,
+                        font: { size: 10 },
+                        callback: (v) => '$' + v + 'm'
+                    },
+                    grid: { color: GRID_COLOR }
+                },
+                y1: {
+                    position: 'right',
+                    ticks: {
+                        color: AMBER,
+                        font: { size: 10 },
+                        callback: (v) => v + '%'
+                    },
+                    grid: { display: false },
+                    min: -20,
+                    max: 30
+                }
+            }
+        }
+    });
+
+    // ========================================
+    // 8. NET PROFIT / LOSS
+    // ========================================
+    new Chart(document.getElementById('netProfitChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+            datasets: [{
+                label: 'Net Profit/(Loss) NZ$m',
+                data: [21.3, -56.7, -9.8, -21.4, -13.9, -1.0],
+                backgroundColor: [GREEN, RED, RED, RED, RED, AMBER],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: (ctx) => ctx.raw >= 0 ? 'end' : 'start',
+                    align: (ctx) => ctx.raw >= 0 ? 'top' : 'bottom',
+                    color: '#94a3b8',
+                    font: { size: 11, weight: 'bold' },
+                    formatter: (v) => (v >= 0 ? '+' : '') + '$' + v.toFixed(1) + 'm'
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 9. OPERATING CASH FLOW
+    // ========================================
+    new Chart(document.getElementById('cashflowChart'), {
+        type: 'line',
+        data: {
+            labels: ['2021', '2022', '2023', '2024'],
+            datasets: [{
+                label: 'Operating Cash Flow (NZ$m)',
+                data: [11.3, 12.4, 9.0, 16.8],
+                borderColor: GREEN,
+                backgroundColor: 'rgba(52, 211, 153, 0.1)',
+                pointBackgroundColor: GREEN,
+                pointBorderColor: GREEN,
+                pointRadius: 6,
+                borderWidth: 2.5,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 11, weight: 'bold' },
+                    formatter: (v) => '$' + v.toFixed(1) + 'm'
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: true,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 10. HEADCOUNT
+    // ========================================
+    new Chart(document.getElementById('headcountChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2020', '2021', '2022', '2023', '2024'],
+            datasets: [{
+                label: 'Employees',
+                data: [613, 658, 779, 716, 711],
+                backgroundColor: [GRAY, BLUE, BLUE_LIGHT, BLUE, BLUE],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 12, weight: 'bold' }
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: false,
+                    min: 500,
+                    max: 850
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 11. REVENUE PER EMPLOYEE
+    // ========================================
+    new Chart(document.getElementById('revPerEmployee'), {
+        type: 'line',
+        data: {
+            labels: ['2020', '2021', '2022', '2023', '2024'],
+            datasets: [{
+                label: 'Revenue per Employee (NZ$k)',
+                data: [143, 149, 173, 200, 211],
+                borderColor: PURPLE,
+                backgroundColor: 'rgba(167, 139, 250, 0.1)',
+                pointBackgroundColor: PURPLE,
+                pointBorderColor: PURPLE,
+                pointRadius: 6,
+                borderWidth: 2.5,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 11, weight: 'bold' },
+                    formatter: (v) => '$' + v + 'k'
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: false,
+                    min: 100,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'k'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 12. SHARE PRICE MILESTONES
+    // ========================================
+    new Chart(document.getElementById('sharePriceChart'), {
+        type: 'line',
+        data: {
+            labels: ['IPO\nAug 2014', 'End\n2015', 'End\n2016', 'End\n2017', 'End\n2018', 'ATH\nJun 2019', 'COVID Low\nMar 2020', 'Raise Price\nApr 2020', 'End\n2021', 'End\n2022', 'End\n2023', '52w High\n2025', 'Recent\nFeb 2026'],
+            datasets: [{
+                label: 'Share Price (NZ$)',
+                data: [2.35, 3.80, 4.00, 4.50, 4.20, 5.85, 0.84, 1.05, 1.80, 1.50, 2.80, 4.00, 2.58],
+                borderColor: BLUE_LIGHT,
+                backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                pointBackgroundColor: [BLUE, BLUE, BLUE, BLUE, BLUE, GREEN, RED, RED, AMBER, AMBER, BLUE, GREEN, BLUE],
+                pointBorderColor: [BLUE, BLUE, BLUE, BLUE, BLUE, GREEN, RED, RED, AMBER, AMBER, BLUE, GREEN, BLUE],
+                pointRadius: 7,
+                borderWidth: 2,
+                tension: 0.2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: (ctx) => {
+                        const idx = ctx.dataIndex;
+                        if (idx === 6 || idx === 7) return 'start';
+                        return 'end';
+                    },
+                    align: (ctx) => {
+                        const idx = ctx.dataIndex;
+                        if (idx === 6 || idx === 7) return 'bottom';
+                        return 'top';
+                    },
+                    color: '#94a3b8',
+                    font: { size: 10, weight: 'bold' },
+                    formatter: (v) => '$' + v.toFixed(2)
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => 'NZ$' + ctx.raw.toFixed(2)
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: TICK_COLOR, font: { size: 9 }, maxRotation: 0 },
+                    grid: { color: GRID_COLOR }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 7,
+                    ticks: {
+                        color: TICK_COLOR,
+                        font: { size: 10 },
+                        callback: (v) => '$' + v.toFixed(2)
+                    },
+                    grid: { color: GRID_COLOR }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 13. ARR TRAJECTORY
+    // ========================================
+    new Chart(document.getElementById('arrChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2023', '2024', '2026E', 'LT Target'],
+            datasets: [{
+                label: 'ARR (NZ$m)',
+                data: [126.3, 145.6, 175.0, 315.0],
+                backgroundColor: [BLUE, BLUE, 'rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0.25)'],
+                borderColor: [BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT],
+                borderWidth: 1,
+                borderRadius: 4,
+                borderDash: [0, 0]
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 12, weight: 'bold' },
+                    formatter: (v) => '$' + v + 'm'
+                }
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: true,
+                    max: 350,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => '$' + v + 'm'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // ========================================
+    // 14. MARGIN EXPANSION ROADMAP
+    // ========================================
+    new Chart(document.getElementById('marginRoadmap'), {
+        type: 'bar',
+        data: {
+            labels: ['2021', '2022', '2023', '2024', '2025E', 'LT Low', 'LT High'],
+            datasets: [{
+                label: 'EBITDA Margin %',
+                data: [6.6, 7.8, 9.3, 14.4, 17.0, 33, 37],
+                backgroundColor: [GRAY, GRAY, BLUE, BLUE, 'rgba(59, 130, 246, 0.5)', GREEN_DARK, GREEN],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                ...commonOptions.plugins,
+                legend: { display: false },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#94a3b8',
+                    font: { size: 12, weight: 'bold' },
+                    formatter: (v) => v + '%'
+                },
+                annotation: {}
+            },
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    beginAtZero: true,
+                    max: 45,
+                    ticks: {
+                        ...commonOptions.scales.y.ticks,
+                        callback: (v) => v + '%'
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+</script>
+
+</body>
+</html>
