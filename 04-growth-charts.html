@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vista Group International (VGL) -- Financial Intelligence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <style>
@@ -14,40 +17,54 @@
         }
 
         body {
-            background-color: #0a0e1a;
-            color: #e0e6f0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #F0EDE6;
+            color: #1A1A1A;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
             padding: 0;
         }
 
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.06;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+            background-size: 256px 256px;
+        }
+
         .header {
-            background: linear-gradient(135deg, #0f1629 0%, #1a1f3a 50%, #0d1225 100%);
-            border-bottom: 1px solid #2a3050;
+            background: #F5F0E1;
+            border-bottom: 1px solid rgba(26,26,26,0.08);
             padding: 40px 60px;
             text-align: center;
         }
 
         .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 2.4rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #1A1A1A;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
 
         .header .subtitle {
             font-size: 1.1rem;
-            color: #7b8ab8;
+            color: #8A8578;
             font-weight: 400;
         }
 
         .header .ticker {
             display: inline-block;
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            color: #fff;
+            background: #1B2D4F;
+            color: #F5F0E1;
             padding: 4px 16px;
             border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             font-weight: 600;
             margin-top: 12px;
@@ -59,8 +76,8 @@
             justify-content: center;
             gap: 40px;
             padding: 28px 60px;
-            background: #0d1225;
-            border-bottom: 1px solid #1a2040;
+            background: #F5F0E1;
+            border-bottom: 1px solid rgba(26,26,26,0.08);
             flex-wrap: wrap;
         }
 
@@ -70,18 +87,19 @@
         }
 
         .kpi-value {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 1.7rem;
             font-weight: 700;
-            color: #60a5fa;
+            color: #1B2D4F;
         }
 
-        .kpi-value.green { color: #34d399; }
-        .kpi-value.amber { color: #fbbf24; }
-        .kpi-value.red { color: #f87171; }
+        .kpi-value.green { color: #D4622B; }
+        .kpi-value.amber { color: #8A8578; }
+        .kpi-value.red { color: #C4391D; }
 
         .kpi-label {
             font-size: 0.75rem;
-            color: #6b7599;
+            color: #8A8578;
             text-transform: uppercase;
             letter-spacing: 1.2px;
             margin-top: 4px;
@@ -101,16 +119,18 @@
         }
 
         .chart-card {
-            background: linear-gradient(180deg, #111827 0%, #0f1420 100%);
-            border: 1px solid #1e293b;
+            background: #F5F0E1;
+            border: 1px solid rgba(26,26,26,0.08);
             border-radius: 16px;
             padding: 28px;
             position: relative;
-            transition: border-color 0.2s;
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+            box-shadow: 0 1px 3px rgba(26,26,26,0.04);
         }
 
         .chart-card:hover {
-            border-color: #334155;
+            box-shadow: 0 4px 20px rgba(26,26,26,0.08);
+            transform: translateY(-2px);
         }
 
         .chart-card.full-width {
@@ -118,15 +138,16 @@
         }
 
         .chart-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #cbd5e1;
+            color: #1A1A1A;
             margin-bottom: 4px;
         }
 
         .chart-card .chart-desc {
             font-size: 0.8rem;
-            color: #4b5563;
+            color: #8A8578;
             margin-bottom: 20px;
         }
 
@@ -141,19 +162,20 @@
         }
 
         .note {
-            font-size: 0.75rem;
-            color: #4b5563;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: #8A8578;
             margin-top: 12px;
             font-style: italic;
         }
 
         .section-title {
-            font-size: 1.4rem;
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            color: #94a3b8;
+            color: #1B2D4F;
             margin: 50px 0 20px 0;
             padding-bottom: 10px;
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid rgba(26,26,26,0.08);
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 0.9rem;
@@ -162,30 +184,37 @@
         .footer {
             text-align: center;
             padding: 40px;
-            color: #374151;
+            color: #8A8578;
             font-size: 0.75rem;
-            border-top: 1px solid #1a2040;
+            border-top: 1px solid rgba(26,26,26,0.08);
             margin-top: 60px;
         }
 
         .footer a {
-            color: #4b5563;
+            color: #D4622B;
             text-decoration: none;
         }
 
         .table-card {
-            background: linear-gradient(180deg, #111827 0%, #0f1420 100%);
-            border: 1px solid #1e293b;
+            background: #F5F0E1;
+            border: 1px solid rgba(26,26,26,0.08);
             border-radius: 16px;
             padding: 28px;
             margin-bottom: 30px;
             overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(26,26,26,0.04);
+            transition: box-shadow 0.4s ease;
+        }
+
+        .table-card:hover {
+            box-shadow: 0 4px 20px rgba(26,26,26,0.08);
         }
 
         .table-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #cbd5e1;
+            color: #1A1A1A;
             margin-bottom: 16px;
         }
 
@@ -196,12 +225,13 @@
         }
 
         th {
-            background: #1a2040;
-            color: #94a3b8;
+            background: rgba(27,45,79,0.06);
+            color: #1B2D4F;
             font-weight: 600;
             text-align: left;
             padding: 10px 14px;
-            border-bottom: 1px solid #2a3050;
+            border-bottom: 1px solid rgba(26,26,26,0.08);
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -209,16 +239,18 @@
 
         td {
             padding: 10px 14px;
-            border-bottom: 1px solid #151d30;
-            color: #cbd5e1;
+            border-bottom: 1px solid rgba(26,26,26,0.05);
+            color: #1A1A1A;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
         }
 
         tr:hover td {
-            background: #141c30;
+            background: rgba(212,98,43,0.04);
         }
 
-        .positive { color: #34d399; }
-        .negative { color: #f87171; }
+        .positive { color: #D4622B; }
+        .negative { color: #C4391D; }
 
         @media (max-width: 900px) {
             .chart-grid {
@@ -583,20 +615,24 @@
 </div>
 
 <script>
-    // Colour palette
-    const BLUE = '#3b82f6';
-    const BLUE_LIGHT = '#60a5fa';
-    const BLUE_DARK = '#1d4ed8';
-    const GREEN = '#34d399';
-    const GREEN_DARK = '#059669';
-    const AMBER = '#fbbf24';
-    const RED = '#f87171';
-    const PURPLE = '#a78bfa';
-    const TEAL = '#2dd4bf';
-    const PINK = '#f472b6';
-    const GRAY = '#6b7280';
-    const GRID_COLOR = 'rgba(148, 163, 184, 0.08)';
-    const TICK_COLOR = '#4b5563';
+    // Warm palette -- Rauschenberg-inspired
+    const ORANGE = '#D4622B';
+    const ORANGE_LIGHT = 'rgba(212,98,43,0.5)';
+    const NAVY = '#1B2D4F';
+    const NAVY_LIGHT = 'rgba(27,45,79,0.5)';
+    const RED = '#C4391D';
+    const RED_LIGHT = 'rgba(196,57,29,0.5)';
+    const GREY = '#8A8578';
+    const GREY_LIGHT = 'rgba(138,133,120,0.5)';
+    const GRID_COLOR = 'rgba(26,26,26,0.06)';
+    const TICK_COLOR = '#8A8578';
+    const LABEL_COLOR = '#1A1A1A';
+    const DATALABEL_COLOR = '#8A8578';
+
+    // Set Chart.js global defaults for warm theme
+    Chart.defaults.color = '#8A8578';
+    Chart.defaults.font.family = "'JetBrains Mono', 'Inter', monospace";
+    Chart.defaults.font.size = 11;
 
     // Common chart options
     const commonOptions = {
@@ -604,17 +640,17 @@
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                labels: { color: '#94a3b8', font: { size: 11 } }
+                labels: { color: LABEL_COLOR, font: { size: 11, family: "'JetBrains Mono', monospace" } }
             },
             datalabels: { display: false }
         },
         scales: {
             x: {
-                ticks: { color: TICK_COLOR, font: { size: 10 } },
+                ticks: { color: TICK_COLOR, font: { size: 10, family: "'JetBrains Mono', monospace" } },
                 grid: { color: GRID_COLOR }
             },
             y: {
-                ticks: { color: TICK_COLOR, font: { size: 10 } },
+                ticks: { color: TICK_COLOR, font: { size: 10, family: "'JetBrains Mono', monospace" } },
                 grid: { color: GRID_COLOR }
             }
         }
@@ -631,16 +667,16 @@
                 label: 'Revenue (NZ$m)',
                 data: [38.7, 55.4, 74.2, 88.3, 100.6, 112.8, 143.0, 87.5, 98.1, 135.1, 143.0, 150.0, 170.0],
                 backgroundColor: [
-                    BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE,
+                    NAVY, NAVY, NAVY, NAVY, NAVY, NAVY, NAVY,
                     RED,  // COVID year
-                    AMBER, GREEN, GREEN, GREEN,
-                    'rgba(59, 130, 246, 0.5)' // Estimate
+                    GREY, ORANGE, ORANGE, ORANGE,
+                    ORANGE_LIGHT // Estimate
                 ],
                 borderColor: [
-                    BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT,
+                    NAVY, NAVY, NAVY, NAVY, NAVY, NAVY, NAVY,
                     RED,
-                    AMBER, GREEN, GREEN, GREEN,
-                    BLUE_LIGHT
+                    GREY, ORANGE, ORANGE, ORANGE,
+                    ORANGE
                 ],
                 borderWidth: 1,
                 borderRadius: 4
@@ -655,8 +691,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 10, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 10, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => '$' + v.toFixed(1) + 'm'
                 },
                 tooltip: {
@@ -692,13 +728,13 @@
                 {
                     label: 'Recurring Revenue',
                     data: [66.0, 81.4, 112.3, 124.0, 134.6, 155.0],
-                    backgroundColor: BLUE,
+                    backgroundColor: NAVY,
                     borderRadius: 4
                 },
                 {
                     label: 'Non-Recurring Revenue',
                     data: [21.5, 16.7, 22.8, 19.0, 15.4, 15.0],
-                    backgroundColor: GRAY,
+                    backgroundColor: GREY,
                     borderRadius: 4
                 }
             ]
@@ -739,7 +775,7 @@
             datasets: [{
                 label: 'SaaS Revenue (NZ$m)',
                 data: [27.8, 38.4, 45.9, 55.7, 63.2],
-                backgroundColor: [TEAL, TEAL, TEAL, TEAL, 'rgba(45, 212, 191, 0.5)'],
+                backgroundColor: [ORANGE, ORANGE, ORANGE, ORANGE, ORANGE_LIGHT],
                 borderRadius: 4
             }]
         },
@@ -752,8 +788,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 11, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 11, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => '$' + v.toFixed(1) + 'm'
                 }
             },
@@ -781,9 +817,9 @@
             labels: ['Cinema (Vista Cloud, Movio EQ, Veezi, Vista Classic)', 'Film (Maccs, Numero, Powster, Flicks, Movio Research)'],
             datasets: [{
                 data: [119.8, 30.2],
-                backgroundColor: [BLUE, PURPLE],
-                borderColor: ['#1e3a5f', '#3b2570'],
-                borderWidth: 2,
+                backgroundColor: [NAVY, ORANGE],
+                borderColor: ['#F5F0E1', '#F5F0E1'],
+                borderWidth: 3,
                 hoverOffset: 8
             }]
         },
@@ -793,12 +829,12 @@
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { color: '#94a3b8', font: { size: 11 }, padding: 16 }
+                    labels: { color: LABEL_COLOR, font: { size: 11, family: "'JetBrains Mono', monospace" }, padding: 16 }
                 },
                 datalabels: {
                     display: true,
-                    color: '#fff',
-                    font: { size: 14, weight: 'bold' },
+                    color: '#F5F0E1',
+                    font: { size: 14, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (value, ctx) => {
                         let pct = ((value / 150.0) * 100).toFixed(0);
                         return '$' + value + 'm\n(' + pct + '%)';
@@ -825,16 +861,16 @@
                 {
                     label: '2023 Contribution Margin',
                     data: [36.2, 9.7],
-                    backgroundColor: 'rgba(59, 130, 246, 0.4)',
-                    borderColor: BLUE_LIGHT,
+                    backgroundColor: NAVY_LIGHT,
+                    borderColor: NAVY,
                     borderWidth: 1,
                     borderRadius: 4
                 },
                 {
                     label: '2024 Contribution Margin',
                     data: [40.2, 12.0],
-                    backgroundColor: BLUE,
-                    borderColor: BLUE_LIGHT,
+                    backgroundColor: NAVY,
+                    borderColor: NAVY,
                     borderWidth: 1,
                     borderRadius: 4
                 }
@@ -867,13 +903,13 @@
                 {
                     label: 'H1 2024',
                     data: [55.5, 14.2],
-                    backgroundColor: 'rgba(59, 130, 246, 0.3)',
+                    backgroundColor: NAVY_LIGHT,
                     borderRadius: 4
                 },
                 {
                     label: 'H1 2025',
                     data: [60.5, 16.5],
-                    backgroundColor: BLUE,
+                    backgroundColor: NAVY,
                     borderRadius: 4
                 }
             ]
@@ -907,7 +943,7 @@
                     type: 'bar',
                     label: 'EBITDA (NZ$m)',
                     data: [31.1, -11.0, 6.5, 10.6, 13.3, 21.6, 28.9],
-                    backgroundColor: [GREEN, RED, AMBER, AMBER, BLUE, GREEN, 'rgba(52, 211, 153, 0.4)'],
+                    backgroundColor: [ORANGE, RED, GREY, GREY, NAVY, ORANGE, ORANGE_LIGHT],
                     borderRadius: 4,
                     yAxisID: 'y'
                 },
@@ -915,10 +951,10 @@
                     type: 'line',
                     label: 'EBITDA Margin %',
                     data: [21.7, -12.6, 6.6, 7.8, 9.3, 14.4, 17.0],
-                    borderColor: AMBER,
+                    borderColor: ORANGE,
                     backgroundColor: 'transparent',
-                    pointBackgroundColor: AMBER,
-                    pointBorderColor: AMBER,
+                    pointBackgroundColor: ORANGE,
+                    pointBorderColor: ORANGE,
                     pointRadius: 5,
                     borderWidth: 2.5,
                     tension: 0.3,
@@ -931,7 +967,7 @@
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    labels: { color: '#94a3b8', font: { size: 11 } }
+                    labels: { color: LABEL_COLOR, font: { size: 11, family: "'JetBrains Mono', monospace" } }
                 },
                 datalabels: { display: false },
                 tooltip: {
@@ -945,14 +981,14 @@
             },
             scales: {
                 x: {
-                    ticks: { color: TICK_COLOR, font: { size: 10 } },
+                    ticks: { color: TICK_COLOR, font: { size: 10, family: "'JetBrains Mono', monospace" } },
                     grid: { color: GRID_COLOR }
                 },
                 y: {
                     position: 'left',
                     ticks: {
                         color: TICK_COLOR,
-                        font: { size: 10 },
+                        font: { size: 10, family: "'JetBrains Mono', monospace" },
                         callback: (v) => '$' + v + 'm'
                     },
                     grid: { color: GRID_COLOR }
@@ -960,8 +996,8 @@
                 y1: {
                     position: 'right',
                     ticks: {
-                        color: AMBER,
-                        font: { size: 10 },
+                        color: ORANGE,
+                        font: { size: 10, family: "'JetBrains Mono', monospace" },
                         callback: (v) => v + '%'
                     },
                     grid: { display: false },
@@ -982,7 +1018,7 @@
             datasets: [{
                 label: 'Net Profit/(Loss) NZ$m',
                 data: [21.3, -56.7, -9.8, -21.4, -13.9, -1.0],
-                backgroundColor: [GREEN, RED, RED, RED, RED, AMBER],
+                backgroundColor: [ORANGE, RED, RED, RED, RED, GREY],
                 borderRadius: 4
             }]
         },
@@ -995,8 +1031,8 @@
                     display: true,
                     anchor: (ctx) => ctx.raw >= 0 ? 'end' : 'start',
                     align: (ctx) => ctx.raw >= 0 ? 'top' : 'bottom',
-                    color: '#94a3b8',
-                    font: { size: 11, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 11, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => (v >= 0 ? '+' : '') + '$' + v.toFixed(1) + 'm'
                 }
             },
@@ -1024,10 +1060,10 @@
             datasets: [{
                 label: 'Operating Cash Flow (NZ$m)',
                 data: [11.3, 12.4, 9.0, 16.8],
-                borderColor: GREEN,
-                backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                pointBackgroundColor: GREEN,
-                pointBorderColor: GREEN,
+                borderColor: ORANGE,
+                backgroundColor: 'rgba(212,98,43,0.08)',
+                pointBackgroundColor: ORANGE,
+                pointBorderColor: ORANGE,
                 pointRadius: 6,
                 borderWidth: 2.5,
                 tension: 0.3,
@@ -1043,8 +1079,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 11, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 11, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => '$' + v.toFixed(1) + 'm'
                 }
             },
@@ -1073,7 +1109,7 @@
             datasets: [{
                 label: 'Employees',
                 data: [613, 658, 779, 716, 711],
-                backgroundColor: [GRAY, BLUE, BLUE_LIGHT, BLUE, BLUE],
+                backgroundColor: [GREY, NAVY, NAVY, NAVY, NAVY],
                 borderRadius: 4
             }]
         },
@@ -1086,8 +1122,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 12, weight: 'bold' }
+                    color: DATALABEL_COLOR,
+                    font: { size: 12, weight: 'bold', family: "'JetBrains Mono', monospace" }
                 }
             },
             scales: {
@@ -1113,10 +1149,10 @@
             datasets: [{
                 label: 'Revenue per Employee (NZ$k)',
                 data: [143, 149, 173, 200, 211],
-                borderColor: PURPLE,
-                backgroundColor: 'rgba(167, 139, 250, 0.1)',
-                pointBackgroundColor: PURPLE,
-                pointBorderColor: PURPLE,
+                borderColor: NAVY,
+                backgroundColor: 'rgba(27,45,79,0.08)',
+                pointBackgroundColor: NAVY,
+                pointBorderColor: NAVY,
                 pointRadius: 6,
                 borderWidth: 2.5,
                 tension: 0.3,
@@ -1132,8 +1168,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 11, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 11, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => '$' + v + 'k'
                 }
             },
@@ -1163,10 +1199,10 @@
             datasets: [{
                 label: 'Share Price (NZ$)',
                 data: [2.35, 3.80, 4.00, 4.50, 4.20, 5.85, 0.84, 1.05, 1.80, 1.50, 2.80, 4.00, 2.58],
-                borderColor: BLUE_LIGHT,
-                backgroundColor: 'rgba(96, 165, 250, 0.08)',
-                pointBackgroundColor: [BLUE, BLUE, BLUE, BLUE, BLUE, GREEN, RED, RED, AMBER, AMBER, BLUE, GREEN, BLUE],
-                pointBorderColor: [BLUE, BLUE, BLUE, BLUE, BLUE, GREEN, RED, RED, AMBER, AMBER, BLUE, GREEN, BLUE],
+                borderColor: NAVY,
+                backgroundColor: 'rgba(27,45,79,0.06)',
+                pointBackgroundColor: [NAVY, NAVY, NAVY, NAVY, NAVY, ORANGE, RED, RED, GREY, GREY, NAVY, ORANGE, NAVY],
+                pointBorderColor: [NAVY, NAVY, NAVY, NAVY, NAVY, ORANGE, RED, RED, GREY, GREY, NAVY, ORANGE, NAVY],
                 pointRadius: 7,
                 borderWidth: 2,
                 tension: 0.2,
@@ -1190,8 +1226,8 @@
                         if (idx === 6 || idx === 7) return 'bottom';
                         return 'top';
                     },
-                    color: '#94a3b8',
-                    font: { size: 10, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 10, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => '$' + v.toFixed(2)
                 },
                 tooltip: {
@@ -1202,7 +1238,7 @@
             },
             scales: {
                 x: {
-                    ticks: { color: TICK_COLOR, font: { size: 9 }, maxRotation: 0 },
+                    ticks: { color: TICK_COLOR, font: { size: 9, family: "'JetBrains Mono', monospace" }, maxRotation: 0 },
                     grid: { color: GRID_COLOR }
                 },
                 y: {
@@ -1210,7 +1246,7 @@
                     max: 7,
                     ticks: {
                         color: TICK_COLOR,
-                        font: { size: 10 },
+                        font: { size: 10, family: "'JetBrains Mono', monospace" },
                         callback: (v) => '$' + v.toFixed(2)
                     },
                     grid: { color: GRID_COLOR }
@@ -1230,8 +1266,8 @@
             datasets: [{
                 label: 'ARR (NZ$m)',
                 data: [126.3, 145.6, 175.0, 315.0],
-                backgroundColor: [BLUE, BLUE, 'rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0.25)'],
-                borderColor: [BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT],
+                backgroundColor: [NAVY, NAVY, NAVY_LIGHT, 'rgba(27,45,79,0.25)'],
+                borderColor: [NAVY, NAVY, NAVY, NAVY],
                 borderWidth: 1,
                 borderRadius: 4,
                 borderDash: [0, 0]
@@ -1246,8 +1282,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 12, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 12, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => '$' + v + 'm'
                 }
             },
@@ -1277,7 +1313,7 @@
             datasets: [{
                 label: 'EBITDA Margin %',
                 data: [6.6, 7.8, 9.3, 14.4, 17.0, 33, 37],
-                backgroundColor: [GRAY, GRAY, BLUE, BLUE, 'rgba(59, 130, 246, 0.5)', GREEN_DARK, GREEN],
+                backgroundColor: [GREY, GREY, NAVY, NAVY, NAVY_LIGHT, ORANGE, ORANGE],
                 borderRadius: 4
             }]
         },
@@ -1290,8 +1326,8 @@
                     display: true,
                     anchor: 'end',
                     align: 'top',
-                    color: '#94a3b8',
-                    font: { size: 12, weight: 'bold' },
+                    color: DATALABEL_COLOR,
+                    font: { size: 12, weight: 'bold', family: "'JetBrains Mono', monospace" },
                     formatter: (v) => v + '%'
                 },
                 annotation: {}

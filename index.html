@@ -4,18 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vista Intelligence</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Inter', -apple-system, sans-serif;
-    background: #0a0e1a;
-    color: #e2e8f0;
+    background: #F0EDE6;
+    color: #1A1A1A;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
   }
   .wrap {
     text-align: center;
@@ -23,17 +34,18 @@
     max-width: 600px;
   }
   h1 {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: -0.03em;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #e2e8f0, #06b6d4);
+    background: linear-gradient(135deg, #1B2D4F, #D4622B);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .sub {
     font-size: 0.85rem;
-    color: #64748b;
+    color: #8A8578;
     margin-bottom: 3rem;
   }
   .links {
@@ -44,26 +56,27 @@
   a {
     display: block;
     padding: 1.25rem 2rem;
-    background: #111827;
-    border: 1px solid #1e293b;
+    background: #F5F0E1;
+    border: 1px solid rgba(26,26,26,0.08);
     border-radius: 12px;
-    color: #e2e8f0;
+    color: #1A1A1A;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
     transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
   a:hover {
-    background: #1a2236;
-    border-color: #06b6d4;
+    background: #EDE8D8;
+    border-color: #D4622B;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
   a span {
     display: block;
     font-size: 0.75rem;
     font-weight: 300;
-    color: #64748b;
+    color: #8A8578;
     margin-top: 4px;
   }
 </style>
